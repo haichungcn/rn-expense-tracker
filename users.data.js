@@ -3,7 +3,15 @@ const INITIAL_USER_DATA = {
     'admin@et.com' : {
         id: 1,
         email: 'admin@et.com',
-        password: 'password'
+        password: 'password',
+        expenses: {
+            1: {
+                id: 1,
+                title: 'invest',
+                amount: 5000,
+                timestamp: new Date()
+            },
+        }
     },
 }
 

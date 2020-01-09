@@ -11,14 +11,22 @@ import INITIAL_USER_DATA from './users.data';
 import LogInScreen from './screens/log-in/log-in.screen'
 import SignUpScreen from './screens/sign-up/sign-up.screen';
 import MainScreen from './screens/main/main.screen';
+import ExpenseListScreen from './screens/expense-list/expense-list.screen';
 
 export default function App() {
   const [users, setUsers] = useState(INITIAL_USER_DATA)
   const [currentUser, setCurrentUser] = useState(null)
   const [content, setContent] = useState('login')
 
+  useEffect(() => {
+    currentUser && setUsers({
+      ...users,
+      [currentUser.email]: currentUser
+    })
+  }, [currentUser])
+
   console.log('users', users)
-  console.log('currentUser', currentUser)
+  console.log('currentUser', currentUser, content)
 
   return (
     <View style={styles.container}>
@@ -27,17 +35,32 @@ export default function App() {
         content === 'login'
           ? <LogInScreen users={users} setCurrentUser={setCurrentUser} setContent={setContent} />
           : content === 'signup'
-            && <SignUpScreen users={users} setUsers={setUsers} setContent={setContent} />
+            && <SignUpScreen
+                users={users}
+                setUsers={setUsers}
+                setCurrentUser={setCurrentUser}
+                setContent={setContent}
+              />
       )}
-      {currentUser &&( 
-        <>
-          <MainScreen currentUser={currentUser}/>
-          <Button title='Log out' onPress={() => {
-              setCurrentUser(null)
-              setContent('login')
-            }}
-          />
-        </>
+      {currentUser && ( 
+          <>
+            {content === 'expenselist'
+              ? <ExpenseListScreen 
+                  currentUser={currentUser}
+                  setContent={setContent}
+                />
+              : <MainScreen
+                  setCurrentUser={setCurrentUser}
+                  currentUser={currentUser}
+                  setContent={setContent}
+                />
+            }
+            <Button title='Log out' onPress={() => {
+                setCurrentUser(null)
+                setContent('login')
+              }}
+            />
+          </>
       )}
     </View>
   );

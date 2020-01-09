@@ -3,7 +3,7 @@ import { View, Text, Button, StyleSheet, Alert } from "react-native";
 
 import FormInput from "../../components/form-input/form-input.component";
 
-const SignUpScreen = ({ users, setUsers, setContent }) => {
+const SignUpScreen = ({ users, setUsers, setCurrentUser, setContent }) => {
     const [input, setInput] = useState({ email: "", password: "" });
 
     const handleChange = (name, value) => {
@@ -15,17 +15,20 @@ const SignUpScreen = ({ users, setUsers, setContent }) => {
 
     const handleSubmitSignUp = () => {
         if (!users.hasOwnProperty(input.email) && input.password) {
+            let newUser = {
+                id: users.count + 1,
+                email: input.email,
+                password: input.password,
+                expenses: {count: 0}
+            }
             setUsers({
                 ...users,
                 count: users.count + 1,
-                [input.email]: {
-                    id: users.count + 1,
-                    email: input.email,
-                    password: input.password
-                }
+                [input.email]: newUser
             });
             Alert.alert('Successfully Signed Up');
             setContent('login')
+            setCurrentUser(newUser)
         } else {
             Alert.alert("This email address is already taken, please try login.");
             setContent('login')
