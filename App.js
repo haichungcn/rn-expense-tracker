@@ -3,12 +3,14 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
 } from 'react-native';
 
 import INITIAL_USER_DATA from './users.data';
 
 import LogInScreen from './screens/log-in/log-in.screen'
 import SignUpScreen from './screens/sign-up/sign-up.screen';
+import MainScreen from './screens/main/main.screen';
 
 export default function App() {
   const [users, setUsers] = useState(INITIAL_USER_DATA)
@@ -21,12 +23,22 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>💵 EXPENSE TRACKER 💵</Text>
-      {content === 'login'
-        ? <LogInScreen users={users} setCurrentUser={setCurrentUser} setContent={setContent} />
-        : content === 'signup'
-          ? <SignUpScreen users={users} setUsers={setUsers} setContent={setContent} />
-          : null
-      }
+      {!currentUser && (
+        content === 'login'
+          ? <LogInScreen users={users} setCurrentUser={setCurrentUser} setContent={setContent} />
+          : content === 'signup'
+            && <SignUpScreen users={users} setUsers={setUsers} setContent={setContent} />
+      )}
+      {currentUser &&( 
+        <>
+          <MainScreen currentUser={currentUser}/>
+          <Button title='Log out' onPress={() => {
+              setCurrentUser(null)
+              setContent('login')
+            }}
+          />
+        </>
+      )}
     </View>
   );
 }
